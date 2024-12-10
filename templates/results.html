@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Results</title>
+    <style>
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+
+        .main-container {
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 20px;
+        }
+
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+            gap: 20px;
+        }
+
+        .img-fluid {
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+
+        .card {
+            margin-top: 20px;
+            min-height: 200px;
+        }
+
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .card-body {
+            font-size: 1rem;
+            text-align: left;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+
+        h1, h2 {
+            color: #343a40;
+        }
+
+
+        .list-group-item {
+            background-color: #f8f9fa;
+            border: none;
+        }
+
+        .list-group-item:hover {
+            background-color: #f1f3f5;
+        }
+
+
+        .list-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+
+        @media (max-width: 768px) {
+            .row {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .card {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="main-container">
+    <div class="container mt-5">
+        {% if predtype %}
+            <h1 class="display-4 mb-4">{{ predtype }} Prediction Results</h1>
+        {% else %}
+            <h1 class="display-4 mb-4">Prediction Results</h1>
+        {% endif %}
+        <h4 class="text-muted mb-4">Current Model Accuracy is {{ model_accuracy }}%</h4>
+
+        <h2 class="mb-4">Data Visualization</h2>
+        <h4>{{ curr_file_hash }}</h4>
+
+        <!-- Images in a grid layout -->
+        <div class="image-grid">
+            <div class="col-md-6 mb-3">
+                <img src="data:image/png;base64,{{ plot1 }}" alt="Prediction Metrics Plot"
+                     class="img-fluid">
+            </div>
+            <div class="col-md-6 mb-3">
+                <img src="data:image/png;base64,{{ plot2 }}" alt="Distillation Visualization"
+                     class="img-fluid">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6 col-md-12 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        High Confidence Functions (Confidence > {{ high_conf_threshold }}%)
+                    </div>
+                    <div class="card-body">
+                        {% if high_confidence_functions %}
+                            <div class="list-container">
+                                <ul class="list-group">
+                                    {% for func in high_confidence_functions %}
+                                        <li class="list-group-item">{{ func }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% else %}
+                            <p>No high confidence functions found.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-md-12 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        Sure Functions (Confidence == 100%)
+                    </div>
+                    <div class="card-body">
+                        {% if sure_vulnerable_functions %}
+                            <div class="list-container">
+                                <ul class="list-group">
+                                    {% for func in sure_vulnerable_functions %}
+                                        <li class="list-group-item">{{ func }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% else %}
+                            <p>No sure functions found.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
