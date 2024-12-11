@@ -3,6 +3,7 @@ import hashlib
 import io
 import os
 
+import matplotlib
 import matplotlib.pyplot as plt
 import pandas as pd
 import tensorflow as tf
@@ -13,6 +14,8 @@ from includes.constants import FN_UNIMPORTANT_FEATURES, FN_TARGET_FEATURE, FN_CP
     BB_UNIMPORTANT_FEATURES, BB_CPP_MEMORY_FEATURES
 
 cache = {}
+
+matplotlib.use('Agg')
 
 HIGH_CONFIDENCE_THRESHOLD = 0.95
 
